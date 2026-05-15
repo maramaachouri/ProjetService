@@ -46,13 +46,14 @@ async update(id: number, updateData: any) {
 }
 
 async remove(id: number) {
-  const vehicle = await this.findOne(id);
+  await this.gpsRepository.delete({
+    vehicle: { id },
+  });
 
   await this.vehicleRepository.delete(id);
 
   return {
     message: 'Vehicle deleted successfully',
-    vehicle,
   };
 }
 

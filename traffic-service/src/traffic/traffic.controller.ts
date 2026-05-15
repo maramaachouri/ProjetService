@@ -7,6 +7,14 @@ import {
   Post,
 } from '@nestjs/common';
 
+import { UseGuards } from '@nestjs/common';
+
+import { AuthGuard } from '@nestjs/passport';
+
+import { Roles } from '../auth/decorators/roles.decorator';
+
+import { RolesGuard } from '../auth/guards/roles.guard';
+
 import { TrafficService } from './traffic.service';
 import { CreateZoneDto } from './dto/create-zone.dto';
 
@@ -25,6 +33,8 @@ export class TrafficController {
   }
 
   @Patch('zones/:id/density')
+@UseGuards(AuthGuard('jwt'), RolesGuard)
+@Roles('ADMIN')
   updateDensity(
     @Param('id') id: string,
     @Body('density') density: number,

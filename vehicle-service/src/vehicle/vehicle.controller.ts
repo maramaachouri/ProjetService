@@ -5,6 +5,12 @@ import { CreateVehicleDto } from './dto/create-vehicle.dto';
 
 import { CreateGpsDto } from './dto/create-gps.dto';
 
+import { UseGuards } from '@nestjs/common';
+
+import { AuthGuard } from '@nestjs/passport';
+
+import { Roles } from '../auth/decorators/roles.decorator';
+import { RolesGuard } from '../auth/guards/roles.gurads';
 
 import {
   
@@ -42,6 +48,8 @@ update(
 }
 
 @Delete(':id')
+@UseGuards(AuthGuard('jwt'), RolesGuard)
+@Roles('ADMIN')
 remove(@Param('id') id: string) {
   return this.vehicleService.remove(+id);
 }

@@ -6,6 +6,14 @@ import { LoginDto } from './dto/login.dto';
 
 import { Get, Req, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { AuthGuard } from '@nestjs/passport';
+import {
+  
+  Request,
+} from '@nestjs/common';
+
+import { Roles } from './decorators/roles.decorator';
+import { RolesGuard } from './guards/roles.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -21,9 +29,10 @@ login(@Body() loginDto: LoginDto) {
   return this.authService.login(loginDto);
 }
 
-@UseGuards(JwtAuthGuard)
 @Get('profile')
-getProfile(@Req() req: any) {
+@UseGuards(AuthGuard('jwt'), RolesGuard)
+@Roles('ADMIN')
+getProfile(@Request() req) {
   return req.user;
 }
 

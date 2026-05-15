@@ -5,10 +5,16 @@ import { VehicleController } from './vehicle.controller';
 import { VehicleService } from './vehicle.service';
 import { Vehicle } from './entities/vehicle.entity';
 
+import { PassportModule } from '@nestjs/passport';
+
+import { JwtStrategy } from '../auth/strategies/jwt.strategy';
 import { GPSPosition } from './entities/gps-position.entity';
 @Module({
-  imports: [TypeOrmModule.forFeature([Vehicle, GPSPosition])],
+  imports: [
+  PassportModule,
+  TypeOrmModule.forFeature([Vehicle, GPSPosition]),
+],
   controllers: [VehicleController],
-  providers: [VehicleService],
+  providers: [VehicleService, JwtStrategy],
 })
 export class VehicleModule {}

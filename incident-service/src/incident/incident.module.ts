@@ -5,9 +5,16 @@ import { IncidentController } from './incident.controller';
 import { IncidentService } from './incident.service';
 import { Incident } from './entities/incident.entity';
 
+import { PassportModule } from '@nestjs/passport';
+
+import { JwtStrategy } from '../auth/strategies/jwt.strategy';
+
 @Module({
-  imports: [TypeOrmModule.forFeature([Incident])],
+  imports: [
+  PassportModule,
+  TypeOrmModule.forFeature([Incident]),
+],
   controllers: [IncidentController],
-  providers: [IncidentService],
+  providers: [IncidentService, JwtStrategy],
 })
 export class IncidentModule {}

@@ -1,0 +1,39 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type VehicleType {
+  id: Int!
+  matricule: String!
+  type: String!
+  status: String!
+}
+
+type IncidentType {
+  id: Int!
+  type: String!
+  description: String!
+  location: String!
+  status: String!
+}
+
+type TrafficZoneType {
+  id: Int!
+  name: String!
+  density: Float!
+  level: String!
+}
+
+type NotificationType {
+  id: Int!
+  message: String!
+  isRead: Boolean!
+  createdAt: String!
+}
+
+type Query {
+  vehicles: [VehicleType!]!
+  incidents: [IncidentType!]!
+  trafficZones: [TrafficZoneType!]!
+  notifications: [NotificationType!]!
+}
