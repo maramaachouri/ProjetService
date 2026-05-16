@@ -39,10 +39,13 @@ private gpsRepository: Repository<GPSPosition>,
   });
 }
 
-async update(id: number, updateData: any) {
-  await this.vehicleRepository.update(id, updateData);
+async update(id: number, updateVehicleDto: any) {
 
-  return this.findOne(id);
+  await this.vehicleRepository.update(id, updateVehicleDto);
+
+  return this.vehicleRepository.findOne({
+    where: { id },
+  });
 }
 
 async remove(id: number) {

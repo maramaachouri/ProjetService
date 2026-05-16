@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-
+import { UpdateDensityDto } from './dto/update-density.dto';
 import {
   TrafficLevel,
   TrafficZone,
 } from './entities/traffic-zone.entity';
+
 
 import { CreateZoneDto } from './dto/create-zone.dto';
 
@@ -31,24 +32,29 @@ export class TrafficService {
     return this.trafficRepository.find();
   }
 
-  async updateDensity(id: number, density: number) {
-    let level = TrafficLevel.LOW;
+  async updateDensity(
+  id: number,
+  updateDensityDto: UpdateDensityDto,
+) {
 
-    if (density > 5 && density <= 10) {
-      level = TrafficLevel.MEDIUM;
-    }
+  const zone = await this.trafficRepository.findOne({
+    where: { id },
+  });
 
-    if (density > 10) {
-      level = TrafficLevel.HIGH;
-    }
-
-    await this.trafficRepository.update(id, {
-      density,
-      level,
-    });
-
-    return this.trafficRepository.findOne({
-      where: { id },
-    });
+  if (!zone) {
+    throw new Error('Zone not found');
   }
+
+  zone.density = updateDensityDto.density;
+
+  if (zone.density <= 5) {
+    zone.level = TrafficLevel.LOW;
+  } else if (zone.density <= 10) {
+    zone.level = TrafficLevel.MEDIUM;;
+  } else {
+    zone.level = TrafficLevel.HIGH;
+  }
+
+  return this.trafficRepository.save(zone);
+}
 }

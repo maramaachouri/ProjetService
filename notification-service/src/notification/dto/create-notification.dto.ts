@@ -1,6 +1,11 @@
 import { IsNotEmpty } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateNotificationDto {
-  @IsNotEmpty()
+
+  @ApiProperty({
+    example: 'Heavy traffic in downtown',
+  })
+
   message!: string;
 }

@@ -7,16 +7,25 @@ import {
   Post,
 } from '@nestjs/common';
 
+import {
+  ApiTags,
+  ApiOperation,
+} from '@nestjs/swagger';
+
 import { NotificationService } from './notification.service';
 import { CreateNotificationDto } from './dto/create-notification.dto';
 
+@ApiTags('Notifications')
 @Controller('notifications')
 export class NotificationController {
   constructor(
     private readonly notificationService: NotificationService,
   ) {}
+@Post()
 
-  @Post()
+ @ApiOperation({
+  summary: 'Create notification',
+})
   create(
     @Body()
     createNotificationDto: CreateNotificationDto,
@@ -26,11 +35,17 @@ export class NotificationController {
     );
   }
 
+  @ApiOperation({
+  summary: 'Get all notifications',
+})
   @Get()
   findAll() {
     return this.notificationService.findAll();
   }
 
+  @ApiOperation({
+  summary: 'Mark notification as read',
+})
   @Patch(':id/read')
   markAsRead(@Param('id') id: string) {
     return this.notificationService.markAsRead(+id);

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-
+import { UpdateStatusDto } from './dto/update-status.dto';
 import {
   Incident,
   IncidentStatus,
@@ -33,16 +33,21 @@ export class IncidentService {
     return this.incidentRepository.find();
   }
 
-  async updateStatus(
-    id: number,
-    status: IncidentStatus,
-  ) {
-    await this.incidentRepository.update(id, {
-      status,
-    });
+async updateStatus(
+  id: number,
+  updateStatusDto: UpdateStatusDto,
+) {
 
-    return this.incidentRepository.findOne({
-      where: { id },
-    });
+  const incident = await this.incidentRepository.findOne({
+    where: { id },
+  });
+
+  if (!incident) {
+    throw new Error('Incident not found');
   }
+
+  incident.status = updateStatusDto.status;
+
+  return this.incidentRepository.save(incident);
+}
 }

@@ -15,23 +15,38 @@ import {
 import { Roles } from './decorators/roles.decorator';
 import { RolesGuard } from './guards/roles.guard';
 
+import {
+  ApiTags,
+  ApiOperation,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
+
+@ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
-
+  @ApiOperation({
+  summary: 'Register a new user',
+})
   @Post('register')
   register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);
   }
-
+  @ApiOperation({
+  summary: 'Login and receive JWT token',
+})
   @Post('login')
 login(@Body() loginDto: LoginDto) {
   return this.authService.login(loginDto);
 }
 
 @Get('profile')
-@UseGuards(AuthGuard('jwt'), RolesGuard)
-@Roles('ADMIN')
+@ApiBearerAuth()
+
+@ApiOperation({
+  summary: 'Get authenticated user profile',
+})
+@UseGuards(AuthGuard('jwt'))
 getProfile(@Request() req) {
   return req.user;
 }
